@@ -1,7 +1,9 @@
 package org.victorferrer.statemachine.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.StateMachineMessageHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,14 +23,14 @@ public class StateMachineController {
 	@ResponseBody
 	public String start() {
 		sm.start();
-		return "ok start";
+		return "ok start" + '\n';
 	}
 	
 	@GetMapping(value = "/event/{id}")
 	@ResponseBody
 	public String event(@PathVariable String id) {
 		sm.sendEvent(Events.valueOf(id));
-		return "ok event";
+		return "ok event" + '\n';
 	}
 
 }

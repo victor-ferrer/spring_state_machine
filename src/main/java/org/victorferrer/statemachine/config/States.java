@@ -2,8 +2,7 @@ package org.victorferrer.statemachine.config;
 
 public enum States 
 {
-	ACCEPTED("Accepted"),RUNNING("Running"),FINISHEDOK("Finished OK"), FINISHEDERROR("Finished Error"),
-	TERMINATED("Terminated");
+	ACCEPTED("Accepted"),RUNNING("Running"),FINISHEDOK("Finished OK"), FINISHEDERROR("Finished Error");
 	
 	private String label;
 	
