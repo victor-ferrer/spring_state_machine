@@ -3,20 +3,18 @@
  */
 package org.victorferrer.statemachine.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
-import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
-import org.springframework.statemachine.listener.StateMachineListener;
-import org.springframework.statemachine.state.State;
-import org.springframework.statemachine.transition.Transition;
 import org.springframework.stereotype.Service;
 import org.victorferrer.statemachine.model.Events;
 import org.victorferrer.statemachine.model.States;
+import org.victorferrer.statemachine.persistence.EventRecord;
+import org.victorferrer.statemachine.persistence.EventRecordRepository;
 
 /**
  * @author victor
@@ -27,6 +25,9 @@ public class StateMachineService implements TaskService {
 
 	@Autowired
 	private StateMachineFactory<States, Events> smFactory;
+	
+	@Autowired
+	private EventRecordRepository repository;
 	
 	
 	private Map<String,StateMachine<States,Events>> smMap = new HashMap<>();
@@ -43,6 +44,14 @@ public class StateMachineService implements TaskService {
 		StateMachine<States, Events> sm = smFactory.getStateMachine(taskId);
 		sm.addStateListener(new TaskStateMachineListener());
 		smMap.put(taskId, sm);
+		
+		EventRecord record = new EventRecord();
+		record.setTaskName(taskId);
+		record.setState(sm.getInitialState().getId());
+		record.setTimestamp(new Date());
+		
+		repository.save(record);
+		
 	}
 
 	/* (non-Javadoc)

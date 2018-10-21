@@ -1,5 +1,7 @@
 package org.victorferrer.statemachine.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.StateMachine;
@@ -11,6 +13,8 @@ import org.victorferrer.statemachine.model.States;
 
 public class TaskStateMachineListener implements StateMachineListener<States, Events> {
 
+	private Logger logger = LoggerFactory.getLogger(TaskStateMachineListener.class);
+	
 	@Override
 	public void stateChanged(State<States, Events> from, State<States, Events> to) {
 		// TODO Auto-generated method stub
@@ -31,7 +35,7 @@ public class TaskStateMachineListener implements StateMachineListener<States, Ev
 
 	@Override
 	public void eventNotAccepted(Message<Events> event) {
-		System.out.println("This event was not accepted:" + event.getPayload());
+		logger.warn("This event was not accepted:" + event.getPayload());
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package org.victorferrer.statemachine.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -11,7 +12,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.victorferrer.statemachine.model.Events;
 import org.victorferrer.statemachine.service.TaskService;
 
+/**
+ * REST controller over the StateMachine Service.
+ * If you want to expose it, so other applications might send requests
+ * use {{enableStateMachineRestController}}
+ * @author victor
+ *
+ */
 @Controller
+@ConditionalOnProperty(name="enableStateMachineRestController", havingValue="true")
 @RequestMapping("/")
 public class StateMachineController {
 	
