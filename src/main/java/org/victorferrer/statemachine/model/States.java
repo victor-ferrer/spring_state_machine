@@ -1,4 +1,4 @@
-package org.victorferrer.statemachine.config;
+package org.victorferrer.statemachine.model;
 
 public enum States 
 {

@@ -2,18 +2,18 @@ package org.victorferrer.statemachine.config;
 
 import java.util.EnumSet;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
-import org.springframework.statemachine.config.EnableStateMachine;
+import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
-import org.springframework.statemachine.guard.Guard;
+import org.victorferrer.statemachine.model.Events;
+import org.victorferrer.statemachine.model.States;
 
 @Configuration
-@EnableStateMachine
+@EnableStateMachineFactory
 public class StateMachineConfig  extends StateMachineConfigurerAdapter<States, Events> {
 
     @Override
@@ -33,7 +33,7 @@ public class StateMachineConfig  extends StateMachineConfigurerAdapter<States, E
         transitions
             .withExternal()
                 .source(States.ACCEPTED).target(States.RUNNING)
-                .event(Events.E1)
+                .event(Events.STARTED)
                 .action(persistAction("Persisting RUNNING state to DB"))
                 .and()
             /* FIXME Figure out how to place a choice to see if RUNNING was OK or not    
@@ -44,8 +44,8 @@ public class StateMachineConfig  extends StateMachineConfigurerAdapter<States, E
                 .and()*/
             .withExternal()
                 .source(States.RUNNING).target(States.FINISHEDOK)
-                .event(Events.E2)
-                .action(persistAction("Persisting FINISHED state to DB"))
+                .event(Events.FINISHED_OK)
+                .action(persistAction("Persisting FINISHED OK state to DB"))
                 .and()
             // FINISH ERROR due to timeout
             .withExternal()
@@ -75,15 +75,10 @@ public class StateMachineConfig  extends StateMachineConfigurerAdapter<States, E
 	private Action<States, Events> persistAction(final String message) {
     	
     	return context -> {
-			System.out.println(message);
+    		String id = context.getStateMachine().getId();
+			System.out.println(id + ":" + message);
 			
 		};
 	}
-	
-    @Bean
-    public StateMachineApplicationEventListener contextListener() {
-    	return new StateMachineApplicationEventListener();
-    }
-	
 	
 }
