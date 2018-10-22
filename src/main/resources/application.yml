@@ -1,0 +1,26 @@
+spring:
+   datasource:
+      url: jdbc:h2:mem:testdb
+   h2:
+      console:
+         enabled: true
+
+enableStateMachineRestController: true
+
+#Expose all actuator endpoints
+management:
+   endpoints:
+      web:
+         exposure:
+            include: "*"
+---
+spring:
+   profiles: openshift
+   h2:
+      console:
+         enabled: false
+   datasource:
+      url: postgresql://postgresql:5432/
+      database: state_machine
+      username: postgres_openshift
+      password: postgres_openshift
