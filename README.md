@@ -28,3 +28,19 @@ curl localhost:8080/actuator/statemachinetrace
 This is the component structure so far:
 
 ![Component Diagram](https://raw.githubusercontent.com/victor-ferrer/spring_state_machine/master/Layers.png)
+
+## Deployment in Openshift
+
+Activate this Spring Profile to use a Postgres database instead of H2:
+```
+SPRING_PROFILES_ACTIVE=openshift
+```
+This is not Openshift specific, it is just that I am deploying there the service as part of a personal learning exercise.
+
+## TODO list
+- [ ] Testing
+- [ ] State Machine in Service not deleted after finished
+- [ ] State Machine Storage in Service is not thread-safe
+- [ ] Timeout to configurable
+- [ ] Example that injects the State Machine configuration from the outside
+- [ ] Example of a Process using the State Machine Service
