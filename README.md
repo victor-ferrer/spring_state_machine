@@ -1,7 +1,8 @@
 # spring_state_machine
-Sample project with Spring State Machine handling task status.
+Sample project with Spring State Machine handling the status of several tasks:
 
-|
+![State Machine Diagram](https://raw.githubusercontent.com/victor-ferrer/spring_state_machine/master/State%20Machine.png)
+      
 It has a REST controller to interact with the system, let's say we want to create and use
 a State Machine called "hello_world"
 
@@ -23,3 +24,7 @@ curl localhost:8080/state/hello_world
 # Access to Spring Boot Actuator State Machine Traces
 curl localhost:8080/actuator/statemachinetrace
 ```
+
+This is the component structure so far:
+
+![Component Diagram](https://raw.githubusercontent.com/victor-ferrer/spring_state_machine/master/Layers.png)
