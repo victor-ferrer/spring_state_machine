@@ -20,7 +20,7 @@ spring:
       console:
          enabled: false
    datasource:
-      url: jdbc:postgresql://postgresql:5432/
+      url: jdbc:postgresql://postgresql:5432/${spring.datasource.database}
       database: state_machine
       username: postgres_openshift
       password: postgres_openshift
