@@ -24,3 +24,8 @@ spring:
       database: state_machine
       username: postgres_openshift
       password: postgres_openshift
+   jpa:
+      show-sql: false
+      generate-ddl: true
+      hibernate:
+         ddl-auto: update      
