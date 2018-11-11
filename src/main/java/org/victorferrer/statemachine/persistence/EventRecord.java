@@ -2,16 +2,14 @@ package org.victorferrer.statemachine.persistence;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.victorferrer.statemachine.model.States;
 
 @Entity
 public class EventRecord {
@@ -21,10 +19,11 @@ public class EventRecord {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     
+    @Column
     private String taskName;
     
-    @Enumerated(EnumType.STRING)
-    private States state;
+    @Column
+    private String state;
     
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp;
@@ -41,10 +40,10 @@ public class EventRecord {
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
 	}
-	public States getState() {
+	public String getState() {
 		return state;
 	}
-	public void setState(States state) {
+	public void setState(String state) {
 		this.state = state;
 	}
 	public Date getTimestamp() {

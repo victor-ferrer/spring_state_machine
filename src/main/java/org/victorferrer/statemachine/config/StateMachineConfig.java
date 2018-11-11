@@ -1,7 +1,8 @@
 package org.victorferrer.statemachine.config;
 
+import java.util.Arrays;
 import java.util.Date;
-import java.util.EnumSet;
+import java.util.HashSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,38 +15,52 @@ import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 import org.victorferrer.statemachine.model.Events;
-import org.victorferrer.statemachine.model.States;
 import org.victorferrer.statemachine.persistence.EventRecord;
 import org.victorferrer.statemachine.persistence.EventRecordRepository;
 
+/**
+ * Sample State MAchine Configuration that might be replaced
+ * by a more sophisticated one.
+ * @author victor
+ *
+ */
 @Configuration
 @EnableStateMachineFactory
-public class StateMachineConfig  extends StateMachineConfigurerAdapter<States, Events> {
+public class StateMachineConfig  extends StateMachineConfigurerAdapter<String, Events> {
 
+	
+	public static final String ACCEPTED = "Accepted";
+	public static final String RUNNING = "Running";
+	public static final String FINISHED_OK = "Finished OK";
+	public static final String FINISHED_ERROR = "Finished Error";
+	
+	
 	@Autowired
 	private EventRecordRepository eventRepo;
 	
 	private Logger logger = LoggerFactory.getLogger(StateMachineConfig.class); 
 	
     @Override
-    public void configure(StateMachineStateConfigurer<States, Events> states)
+    public void configure(StateMachineStateConfigurer<String, Events> configurer)
             throws Exception {
-        states
+        configurer
             .withStates()
-                .initial(States.ACCEPTED)
-                .end(States.FINISHEDOK)
-                .end(States.FINISHEDERROR)
-                .states(EnumSet.allOf(States.class));
+                .initial(ACCEPTED)
+                .end(FINISHED_OK)
+                .end(FINISHED_ERROR)
+                .states(new HashSet<String>(Arrays.asList(ACCEPTED, RUNNING,
+                										  FINISHED_OK, FINISHED_ERROR)));
+        
     }
     
     @Override
-    public void configure(StateMachineTransitionConfigurer<States, Events> transitions)
+    public void configure(StateMachineTransitionConfigurer<String, Events> transitions)
             throws Exception {
         transitions
             .withExternal()
-                .source(States.ACCEPTED).target(States.RUNNING)
+                .source(ACCEPTED).target(RUNNING)
                 .event(Events.STARTED)
-                .action(persistAction(States.RUNNING))
+                .action(persistAction(RUNNING))
                 .and()
             /* FIXME Figure out how to place a choice to see if RUNNING was OK or not    
             .withChoice()
@@ -54,36 +69,36 @@ public class StateMachineConfig  extends StateMachineConfigurerAdapter<States, E
                 .last(States.FINISHEDOK)
                 .and()*/
             .withExternal()
-                .source(States.RUNNING).target(States.FINISHEDOK)
+                .source(RUNNING).target(FINISHED_OK)
                 .event(Events.FINISHED_OK)
-                .action(persistAction(States.FINISHEDOK))
+                .action(persistAction(FINISHED_OK))
                 .and()
             // FINISH ERROR due to timeout
             .withExternal()
-                .source(States.RUNNING).target(States.FINISHEDERROR)
+                .source(RUNNING).target(FINISHED_ERROR)
                 .event(Events.TIMEOUT)
-                .action(persistAction(States.FINISHEDERROR))
+                .action(persistAction(FINISHED_ERROR))
                 .and()                
             // Handle timeout
             .withInternal()
-                .source(States.RUNNING)
+                .source(RUNNING)
                 .action(timeoutAction())
                 .timerOnce(10000);
     }
 
-	private Action<States, Events> timeoutAction() {
+	private Action<String, Events> timeoutAction() {
     	
-    	return new Action<States, Events>(){
+    	return new Action<String, Events>(){
 
 			@Override
-			public void execute(StateContext<States, Events> context) {
+			public void execute(StateContext<String, Events> context) {
 				context.getStateMachine().sendEvent(Events.TIMEOUT);
 			}
     		
     	};
 	}
 
-	private Action<States, Events> persistAction(final States state) {
+	private Action<String, Events> persistAction(String state) {
     	
     	return context -> {
     		String id = context.getStateMachine().getId();

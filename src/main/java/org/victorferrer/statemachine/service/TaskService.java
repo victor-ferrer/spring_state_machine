@@ -1,7 +1,7 @@
 package org.victorferrer.statemachine.service;
 
+import org.victorferrer.statemachine.exception.StateMachineException;
 import org.victorferrer.statemachine.model.Events;
-import org.victorferrer.statemachine.model.States;
 
 /**
  * Contract for interacting with Tasks
@@ -20,20 +20,23 @@ public interface TaskService
 	/**
 	 * Starts the Task with the given ID
 	 * @param taskId
+	 * @throws StateMachineException 
 	 */
-	public void start(String taskId);
+	public void start(String taskId) throws StateMachineException;
 	
 	/**
 	 * Sends an Event to the given task
 	 * @param taskId
 	 * @param event
+	 * @throws StateMachineException 
 	 */
-	public void event(String taskId, Events event);
+	public void event(String taskId, Events event) throws StateMachineException;
 	
 	/**
 	 * Gets the current state of the given task
 	 * @param taskId
 	 * @return
+	 * @throws StateMachineException 
 	 */
-	public States getState(String taskId);
+	public String getState(String taskId) throws StateMachineException;
 }

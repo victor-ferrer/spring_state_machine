@@ -32,9 +32,11 @@ This is the component structure so far:
 ## Deployment in Openshift
 
 Activate this Spring Profile to use a Postgres database instead of H2:
+
 ```
 SPRING_PROFILES_ACTIVE=openshift
 ```
+
 This is not Openshift specific, it is just that I am deploying there the service as part of a personal learning exercise.
 
 ## TODO list
