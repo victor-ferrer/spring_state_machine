@@ -1,7 +1,6 @@
 package org.victorferrer.statemachine.service;
 
 import org.victorferrer.statemachine.exception.StateMachineException;
-import org.victorferrer.statemachine.model.Events;
 
 /**
  * Contract for interacting with Tasks
@@ -25,12 +24,13 @@ public interface TaskService
 	public void start(String taskId) throws StateMachineException;
 	
 	/**
-	 * Sends an Event to the given task
+	 * Sends an Event to the given task 
 	 * @param taskId
 	 * @param event
-	 * @throws StateMachineException 
+	 * @return Boolean on whether the event was accepted by the StateMachine
+	 * @throws StateMachineException
 	 */
-	public void event(String taskId, Events event) throws StateMachineException;
+	public boolean event(String taskId, String event) throws StateMachineException;
 	
 	/**
 	 * Gets the current state of the given task

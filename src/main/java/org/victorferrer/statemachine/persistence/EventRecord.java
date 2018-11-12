@@ -25,6 +25,9 @@ public class EventRecord {
     @Column
     private String state;
     
+    @Column
+    private String errorMsg;
+    
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp;
     
@@ -51,5 +54,11 @@ public class EventRecord {
 	}
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
+	}
+	public String getErrorMsg() {
+		return errorMsg;
+	}
+	public void setErrorMsg(String errorMsg) {
+		this.errorMsg = errorMsg;
 	}
 }

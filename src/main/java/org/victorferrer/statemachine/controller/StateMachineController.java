@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.victorferrer.statemachine.exception.StateMachineException;
-import org.victorferrer.statemachine.model.Events;
 import org.victorferrer.statemachine.service.TaskService;
 
 /**
@@ -62,9 +61,16 @@ public class StateMachineController {
 		return ResponseEntity.status(HttpStatus.OK).body(id);
 	}
 	
-	@PostMapping("/event/{task}/{event}")
-	public ResponseEntity<Object> event(@PathVariable String task, @PathVariable String event) throws StateMachineException {
-		taskService.event(task,Events.valueOf(event));
-		return ResponseEntity.status(HttpStatus.OK).build();
+	@PostMapping("/event/{stateMachine}/{event}")
+	public ResponseEntity<Object> event(@PathVariable String stateMachine, @PathVariable String event) throws StateMachineException {
+		boolean eventAccepted = taskService.event(stateMachine,event);
+		
+		if (eventAccepted) {
+			return ResponseEntity.status(HttpStatus.OK).build();
+		}
+		else {
+			String msg = String.format("Event [%S] not accepted by StateMachine [%s]", event, stateMachine);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
+		}
 	}
 }

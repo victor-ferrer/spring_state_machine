@@ -13,7 +13,6 @@ import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Service;
 import org.victorferrer.statemachine.exception.StateMachineException;
 import org.victorferrer.statemachine.exception.StateMachineNotFoundException;
-import org.victorferrer.statemachine.model.Events;
 import org.victorferrer.statemachine.persistence.EventRecord;
 import org.victorferrer.statemachine.persistence.EventRecordRepository;
 
@@ -25,13 +24,13 @@ import org.victorferrer.statemachine.persistence.EventRecordRepository;
 public class StateMachineService implements TaskService {
 
 	@Autowired
-	private StateMachineFactory<String, Events> smFactory;
+	private StateMachineFactory<String, String> smFactory;
 	
 	@Autowired
 	private EventRecordRepository repository;
 	
 	
-	private Map<String,StateMachine<String,Events>> smMap = new HashMap<>();
+	private Map<String,StateMachine<String,String>> smMap = new HashMap<>();
 	
 	/* (non-Javadoc)
 	 * @see org.victorferrer.statemachine.service.TaskService#create(java.lang.String)
@@ -42,7 +41,7 @@ public class StateMachineService implements TaskService {
 			throw new IllegalArgumentException("State Machine already exists: " + taskId);
 		}
 		
-		StateMachine<String, Events> sm = smFactory.getStateMachine(taskId);
+		StateMachine<String, String> sm = smFactory.getStateMachine(taskId);
 		sm.addStateListener(new TaskStateMachineListener());
 		smMap.put(taskId, sm);
 		
@@ -72,11 +71,11 @@ public class StateMachineService implements TaskService {
 	 * @see org.victorferrer.statemachine.service.TaskService#event(java.lang.String, org.victorferrer.statemachine.model.Events)
 	 */
 	@Override
-	public void event(String taskId, Events event) throws StateMachineException {
+	public boolean event(String taskId, String event) throws StateMachineException {
 		if (!smMap.containsKey(taskId)) {
 			throw new StateMachineNotFoundException("State Machine not found: " + taskId);
 		}
-		smMap.get(taskId).sendEvent(event);
+		return smMap.get(taskId).sendEvent(event);
 	}
 
 	/* (non-Javadoc)
